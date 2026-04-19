@@ -25,10 +25,14 @@ jobs:
           path: homebrew-tap
 
       - name: Symlink as 1mb-dev/tap
+        # Use `brew --repository` (not --prefix): the Library/Taps path
+        # differs between Intel (/usr/local/Homebrew/Library/Taps) and
+        # Apple Silicon (/opt/homebrew/Library/Taps). --repository
+        # resolves to the right base on both.
         run: |
-          mkdir -p "$(brew --prefix)/Homebrew/Library/Taps/1mb-dev"
+          mkdir -p "$(brew --repository)/Library/Taps/1mb-dev"
           ln -s "$GITHUB_WORKSPACE/homebrew-tap" \
-            "$(brew --prefix)/Homebrew/Library/Taps/1mb-dev/homebrew-tap"
+            "$(brew --repository)/Library/Taps/1mb-dev/homebrew-tap"
           brew tap | grep '^1mb-dev/tap$'
 
       - name: brew audit (strict, online, new)
