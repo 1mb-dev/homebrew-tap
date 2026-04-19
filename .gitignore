@@ -1,2 +1,6 @@
 todos/
 .claude/
+.DS_Store
+*.swp
+*.swo
+*~
