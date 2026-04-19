@@ -8,8 +8,10 @@ Homebrew tap for [1mb-dev](https://github.com/1mb-dev) tools.
 
 ```sh
 brew tap 1mb-dev/tap
-brew install natcheck
+brew install <formula>
 ```
+
+Available formulas in the table below.
 
 ## Formulas
 
