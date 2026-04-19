@@ -1,0 +1,53 @@
+name: test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  brew-test:
+    name: brew audit + install + test (macOS)
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout into Homebrew Taps
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: homebrew-tap
+
+      - name: Symlink as 1mb-dev/tap
+        run: |
+          mkdir -p "$(brew --prefix)/Homebrew/Library/Taps/1mb-dev"
+          ln -s "$GITHUB_WORKSPACE/homebrew-tap" \
+            "$(brew --prefix)/Homebrew/Library/Taps/1mb-dev/homebrew-tap"
+          brew tap | grep '^1mb-dev/tap$'
+
+      - name: brew audit (strict, online, new)
+        run: brew audit --strict --online --new 1mb-dev/tap/natcheck
+
+      - name: brew install (build from source)
+        run: brew install --build-from-source 1mb-dev/tap/natcheck
+
+      - name: Verify --version reports 0.1.1
+        run: |
+          installed_version=$(natcheck --version)
+          echo "Got: $installed_version"
+          echo "$installed_version" | grep -q "0.1.1" || {
+            echo "::error::natcheck --version did not report 0.1.1"
+            exit 1
+          }
+
+      - name: brew test
+        run: brew test 1mb-dev/tap/natcheck
+
+      - name: brew uninstall (clean unwind)
+        run: brew uninstall natcheck
