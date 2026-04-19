@@ -1,0 +1,14 @@
+name: dependabot-auto-merge
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    # Pinned SHA from 1mb-dev/.github main @ 2026-03-24. Dependabot will bump.
+    uses: 1mb-dev/.github/.github/workflows/dependabot-auto-merge.yml@7a4a3cf6bf416b7588b9cff1b297f4c4c4645c0e
