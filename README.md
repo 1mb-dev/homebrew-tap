@@ -1,5 +1,7 @@
 # 1mb-dev/homebrew-tap
 
+[![test](https://github.com/1mb-dev/homebrew-tap/actions/workflows/test.yml/badge.svg)](https://github.com/1mb-dev/homebrew-tap/actions/workflows/test.yml)
+
 Homebrew tap for [1mb-dev](https://github.com/1mb-dev) tools.
 
 ## Install
