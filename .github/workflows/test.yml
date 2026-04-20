@@ -14,10 +14,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  discover:
+    name: discover formulas
+    runs-on: ubuntu-latest
+    outputs:
+      formulas: ${{ steps.list.outputs.formulas }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - id: list
+        name: Enumerate Formula/*.rb
+        run: |
+          formulas=$(ls Formula/*.rb 2>/dev/null \
+            | xargs -n1 basename \
+            | sed 's/\.rb$//' \
+            | jq -R . | jq -cs .)
+          echo "formulas=${formulas}" >> "$GITHUB_OUTPUT"
+          echo "Discovered: ${formulas}"
+
   brew-test:
-    name: brew audit + install + test (macOS)
+    name: brew audit + install + test (${{ matrix.formula }})
+    needs: discover
     runs-on: macos-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        formula: ${{ fromJson(needs.discover.outputs.formulas) }}
+    env:
+      FORMULA: ${{ matrix.formula }}
     steps:
       - name: Checkout into Homebrew Taps
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -36,22 +61,30 @@ jobs:
           brew tap | grep '^1mb-dev/tap$'
 
       - name: brew audit (strict, online, new)
-        run: brew audit --strict --online --new 1mb-dev/tap/natcheck
+        run: brew audit --strict --online --new "1mb-dev/tap/$FORMULA"
 
       - name: brew install (build from source)
-        run: brew install --build-from-source 1mb-dev/tap/natcheck
-
-      - name: Verify --version reports 0.1.1
-        run: |
-          installed_version=$(natcheck --version)
-          echo "Got: $installed_version"
-          echo "$installed_version" | grep -q "0.1.1" || {
-            echo "::error::natcheck --version did not report 0.1.1"
-            exit 1
-          }
+        run: brew install --build-from-source "1mb-dev/tap/$FORMULA"
 
       - name: brew test
-        run: brew test 1mb-dev/tap/natcheck
+        run: brew test "1mb-dev/tap/$FORMULA"
 
       - name: brew uninstall (clean unwind)
-        run: brew uninstall natcheck
+        run: brew uninstall "$FORMULA"
+
+  # Stable-named aggregator for branch-protection required checks.
+  # Matrix leg names change as formulas are added; this one doesn't.
+  passed:
+    name: tests passed
+    needs: brew-test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify matrix succeeded
+        env:
+          RESULT: ${{ needs.brew-test.result }}
+        run: |
+          if [ "$RESULT" != "success" ]; then
+            echo "brew-test matrix result: $RESULT"
+            exit 1
+          fi
