@@ -1,8 +1,8 @@
 class Natcheck < Formula
   desc "NAT type diagnosis CLI for WebRTC / P2P / VPN connectivity"
   homepage "https://github.com/1mb-dev/natcheck"
-  url "https://github.com/1mb-dev/natcheck/archive/refs/tags/v0.1.2.tar.gz"
-  sha256 "f0624d8a37f391975ee32a8bb98a6c07a9f03cc06c8b10500753559addd83b1b"
+  url "https://github.com/1mb-dev/natcheck/archive/refs/tags/v0.1.2.1.tar.gz"
+  sha256 "db9568ef1867414835bd1daa25995ceb415131a935ca51c02773ff09f41fa026"
   license "MIT"
   head "https://github.com/1mb-dev/natcheck.git", branch: "main"
 
