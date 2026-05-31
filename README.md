@@ -15,11 +15,14 @@ Available formulas in the table below.
 
 ## Formulas
 
-| Name | Description | Source | Version |
-|------|-------------|--------|---------|
-| [natcheck](Formula/natcheck.rb) | NAT type diagnosis CLI for WebRTC / P2P / VPN | [1mb-dev/natcheck](https://github.com/1mb-dev/natcheck) | 0.1.1 |
-| [gowsay](Formula/gowsay.rb) | Modern cowsay in Go — CLI, REST API, and web UI in one binary | [1mb-dev/gowsay](https://github.com/1mb-dev/gowsay) | 2.0.0 |
-| [lobster](Formula/lobster.rb) | Intelligent web stress testing CLI with auto URL discovery | [1mb-dev/lobster](https://github.com/1mb-dev/lobster) | 2.0.0 |
+| Name | Description | Source |
+|------|-------------|--------|
+| [natcheck](Formula/natcheck.rb) | NAT type diagnosis CLI for WebRTC / P2P / VPN | [1mb-dev/natcheck](https://github.com/1mb-dev/natcheck) |
+| [gowsay](Formula/gowsay.rb) | Modern cowsay in Go - CLI, REST API, and web UI in one binary | [1mb-dev/gowsay](https://github.com/1mb-dev/gowsay) |
+| [lobster](Formula/lobster.rb) | Intelligent web stress testing CLI with auto URL discovery | [1mb-dev/lobster](https://github.com/1mb-dev/lobster) |
+| [shim](Formula/shim.rb) | Anthropic Messages API proxy with built-in request measurement | [1mb-dev/shim](https://github.com/1mb-dev/shim) |
+
+`shim` is daemon-capable: run it directly, or opt into a managed background service with `brew services start shim`.
 
 ## Updating a formula
 
