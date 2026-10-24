@@ -1,8 +1,8 @@
 class Shim < Formula
   desc "Anthropic Messages API proxy with built-in request measurement"
   homepage "https://github.com/1mb-dev/shim"
-  url "https://github.com/1mb-dev/shim/archive/refs/tags/v1.0.1.tar.gz"
-  sha256 "e97ba3fa24410abfe1fb84f7d1ef57445433cea715e4784cfe4008011df12b9d"
+  url "https://github.com/1mb-dev/shim/archive/refs/tags/v1.0.2.tar.gz"
+  sha256 "09121009dff0ab06a1a1063a8a37e735c4204c93a3c406c05d2eed8168bab8f0"
   license "MIT"
   head "https://github.com/1mb-dev/shim.git", branch: "main"
 
