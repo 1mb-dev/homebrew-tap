@@ -5,13 +5,20 @@ on:
     branches: [main]
   push:
     branches: [main]
+  # A formula can break with no commit here: brew audit rules, the runner image, or an
+  # upstream tarball change. The daily run catches that before a user's install does.
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Only PR runs cancel: a schedule and a push on main share the group, and a cancelled
+  # run leaves HEAD unverified.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   discover:
@@ -20,15 +27,13 @@ jobs:
     outputs:
       formulas: ${{ steps.list.outputs.formulas }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@v7
 
       - id: list
         name: Enumerate Formula/*.rb
         run: |
-          formulas=$(ls Formula/*.rb 2>/dev/null \
-            | xargs -n1 basename \
-            | sed 's/\.rb$//' \
-            | jq -R . | jq -cs .)
+          shopt -s nullglob
+          formulas=$(for f in Formula/*.rb; do basename "$f" .rb; done | jq -R . | jq -cs .)
           echo "formulas=${formulas}" >> "$GITHUB_OUTPUT"
           echo "Discovered: ${formulas}"
 
@@ -45,7 +50,7 @@ jobs:
       FORMULA: ${{ matrix.formula }}
     steps:
       - name: Checkout into Homebrew Taps
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v7
         with:
           path: homebrew-tap
 
