@@ -32,10 +32,8 @@ jobs:
       - id: list
         name: Enumerate Formula/*.rb
         run: |
-          formulas=$(ls Formula/*.rb 2>/dev/null \
-            | xargs -n1 basename \
-            | sed 's/\.rb$//' \
-            | jq -R . | jq -cs .)
+          shopt -s nullglob
+          formulas=$(for f in Formula/*.rb; do basename "$f" .rb; done | jq -R . | jq -cs .)
           echo "formulas=${formulas}" >> "$GITHUB_OUTPUT"
           echo "Discovered: ${formulas}"
 
