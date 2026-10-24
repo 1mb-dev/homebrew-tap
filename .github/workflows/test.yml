@@ -5,13 +5,20 @@ on:
     branches: [main]
   push:
     branches: [main]
+  # A formula can break with no commit here: brew audit rules, the runner image, or an
+  # upstream tarball change. The daily run catches that before a user's install does.
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Only PR runs cancel: a schedule and a push on main share the group, and a cancelled
+  # run leaves HEAD unverified.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   discover:
