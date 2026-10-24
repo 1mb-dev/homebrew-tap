@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # No `labels:`: Dependabot creates its default labels, but a listed label must already exist.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
