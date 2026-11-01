@@ -7,8 +7,7 @@ Homebrew tap for [1mb-dev](https://github.com/1mb-dev) tools.
 ## Install
 
 ```sh
-brew tap 1mb-dev/tap
-brew install <formula>
+brew install 1mb-dev/tap/<formula>
 ```
 
 Available formulas in the table below.
