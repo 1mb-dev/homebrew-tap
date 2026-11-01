@@ -65,6 +65,10 @@ jobs:
             "$(brew --repository)/Library/Taps/1mb-dev/homebrew-tap"
           brew tap | grep '^1mb-dev/tap$'
 
+      - name: Trust the tap
+        # Homebrew refuses formulae from a tap that is not explicitly trusted.
+        run: brew trust --tap 1mb-dev/tap
+
       - name: brew audit (strict, online, new)
         run: brew audit --strict --online --new "1mb-dev/tap/$FORMULA"
 
